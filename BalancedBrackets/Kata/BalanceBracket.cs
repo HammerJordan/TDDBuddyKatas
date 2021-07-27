@@ -2,9 +2,11 @@
 {
     public class BalanceBracket
     {
-        public static string TestBrackets(string empty)
+        public static string TestBrackets(string input)
         {
-            return string.Empty;
+            if (string.IsNullOrEmpty(input))
+                return string.Empty;
+            return "OK";
         }
     }
 }

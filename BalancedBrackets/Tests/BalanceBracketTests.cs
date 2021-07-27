@@ -16,12 +16,12 @@ namespace BalancedBrackets.Tests
             result.Should().BeEquivalentTo("");
         }
 
-        // [Fact]
-        // public void ReturnOK_WhenInputIsSingleBraces()
-        // {
-        //     var result = BalanceBracket.TestBrackets("[]");
-        //
-        //     result.Should().BeEquivalentTo("OK");
-        // }
+        [Fact]
+        public void ReturnOK_WhenInputIsSingleBracesInCorrectOrder()
+        {
+            var result = BalanceBracket.TestBrackets("[]");
+        
+            result.Should().BeEquivalentTo("OK");
+        }
     }
 }
