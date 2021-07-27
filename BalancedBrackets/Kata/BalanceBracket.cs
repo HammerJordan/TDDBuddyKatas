@@ -6,7 +6,11 @@
         {
             if (string.IsNullOrEmpty(input))
                 return string.Empty;
-            return "OK";
+
+            if (input.Equals("[]"))
+                return "OK";
+
+            return "FAIL";
         }
     }
 }

@@ -23,5 +23,13 @@ namespace BalancedBrackets.Tests
         
             result.Should().BeEquivalentTo("OK");
         }
+        
+        [Fact]
+        public void ReturnFAIL_WhenInputIsSingleBracesInIncorrectOrder()
+        {
+            var result = BalanceBracket.TestBrackets("][");
+        
+            result.Should().BeEquivalentTo("FAIL");
+        }
     }
 }
