@@ -7,10 +7,26 @@
             if (string.IsNullOrEmpty(input))
                 return string.Empty;
 
-            if (input.Equals("[]"))
-                return "OK";
+            int length = input.Length;
 
-            return "FAIL";
+            for (int i = 0; i < length; i++)
+            {
+                if (input[i] == '[' && input[i + 1] == ']')
+                {
+                    i++;
+                    continue;
+                }
+                
+                if(input[i] == '[' && input[^(1 + i)] == ']')
+                {
+                    length--;
+                    continue;
+                }
+                
+                return "FAIL";
+            }
+
+            return "OK";
         }
     }
 }

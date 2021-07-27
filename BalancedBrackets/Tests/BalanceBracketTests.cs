@@ -31,5 +31,18 @@ namespace BalancedBrackets.Tests
         
             result.Should().BeEquivalentTo("FAIL");
         }
+        
+        [Theory]
+        [InlineData("[][]")]
+        [InlineData("[][][]")]
+        [InlineData("[[]]")]
+        [InlineData("[[[][]]]")]
+        
+        public void ReturnOK_WhenInputIsBracesInCorrectOrder(string value)
+        {
+            var result = BalanceBracket.TestBrackets(value);
+        
+            result.Should().BeEquivalentTo("OK");
+        }
     }
 }
