@@ -15,24 +15,9 @@ namespace BalancedBrackets.Tests
 
             result.Should().BeEquivalentTo("");
         }
-
-        [Fact]
-        public void ReturnOK_WhenInputIsSingleBracesInCorrectOrder()
-        {
-            var result = BalanceBracket.TestBrackets("[]");
-        
-            result.Should().BeEquivalentTo("OK");
-        }
-        
-        [Fact]
-        public void ReturnFAIL_WhenInputIsSingleBracesInIncorrectOrder()
-        {
-            var result = BalanceBracket.TestBrackets("][");
-        
-            result.Should().BeEquivalentTo("FAIL");
-        }
         
         [Theory]
+        [InlineData("[]")]
         [InlineData("[][]")]
         [InlineData("[][][]")]
         [InlineData("[[]]")]
@@ -43,6 +28,17 @@ namespace BalancedBrackets.Tests
             var result = BalanceBracket.TestBrackets(value);
         
             result.Should().BeEquivalentTo("OK");
+        }
+        
+        [Theory]
+        [InlineData("][")]
+        [InlineData("][][")]
+        [InlineData("[][]][")]
+        public void ReturnFAIL_WhenInputIsBracesInIncorrectOrder(string value)
+        {
+            var result = BalanceBracket.TestBrackets(value);
+        
+            result.Should().BeEquivalentTo("FAIL");
         }
     }
 }
