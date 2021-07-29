@@ -1,4 +1,5 @@
-﻿using CharacterCopy.Kata;
+﻿using System.Linq;
+using CharacterCopy.Kata;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
@@ -7,15 +8,32 @@ namespace CharacterCopy.Tests
 {
     public class CopierTests
     {
+        private readonly ISource iSource;
+        private readonly IDestination iDestination;
+        private readonly Copier copier;
+
+        public CopierTests()
+        {
+            iSource = Substitute.For<ISource>();
+            iDestination = Substitute.For<IDestination>();
+
+            copier = new Copier(iSource, iDestination);
+        }
+
         [Fact]
         public void CanConstructCopier()
         {
-            var iSource = Substitute.For<ISource>();
-            var iDestination = Substitute.For<IDestination>();
-
-            var copier = new Copier(iSource, iDestination);
-
             copier.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void Copy_Stops_WhenNewLineReached()
+        {
+            iSource.ReadChar().Returns('\n');
+
+            copier.Copy();
+
+            iSource.Received(1).ReadChar();
         }
     }
 }

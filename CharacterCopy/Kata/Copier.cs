@@ -10,5 +10,10 @@
             this.iSource = iSource;
             this.iDestination = iDestination;
         }
+
+        public void Copy()
+        {
+            iSource.ReadChar();
+        }
     }
 }
