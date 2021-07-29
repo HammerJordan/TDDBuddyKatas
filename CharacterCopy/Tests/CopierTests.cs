@@ -35,5 +35,19 @@ namespace CharacterCopy.Tests
 
             iSource.Received(1).ReadChar();
         }
+        
+        [Fact]
+        public void CopiesCharactersTillNewLineIsReachedPassingEachCharacterToIDestination()
+        {
+            iSource.ReadChar().Returns('a','b','c','\n');
+
+            copier.Copy();
+
+            iSource.Received(4).ReadChar();
+            iDestination.Received(1).WriteChar('a');
+            iDestination.Received(1).WriteChar('b');
+            iDestination.Received(1).WriteChar('c');
+        }
+        
     }
 }

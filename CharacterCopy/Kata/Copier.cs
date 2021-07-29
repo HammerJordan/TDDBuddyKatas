@@ -13,7 +13,13 @@
 
         public void Copy()
         {
-            iSource.ReadChar();
+            char c = iSource.ReadChar();
+
+            while (c != '\n')
+            {
+                iDestination.WriteChar(c);
+                c = iSource.ReadChar();
+            }
         }
     }
 }
