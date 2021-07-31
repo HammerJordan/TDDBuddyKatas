@@ -59,5 +59,18 @@ namespace HeavyMetalBakeSale.Tests
                 .Should()
                 .Throw<InvalidItemException>();
         }
+        
+        
+        [Theory]
+        [InlineData("B", .65)]
+        [InlineData("B,C,M", 3)]
+
+        public void ItemsToPurchase_ShouldReturnAnAppropriateTransaction_WhenInputIsValid(string items, decimal cost)
+        {
+            var transaction = bakeSale.ItemsToPurchase(items);
+
+            transaction.Total.Should().Be(cost);
+            
+        }
     }
 }
