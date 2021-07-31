@@ -44,9 +44,11 @@ namespace HeavyMetalBakeSale.Kata
             {
                 for (int i = 0; i < item.Quantity; i++)
                 {
-                    products += item.Identifier + ',';
+                    products += $"{item.Identifier},";
                 }
             }
+
+            products = products.TrimEnd(',');
 
             return products;
         }
@@ -96,11 +98,25 @@ namespace HeavyMetalBakeSale.Kata
 
         public TransactionReceipt MakeTransaction(Transaction transaction, decimal amountPayed)
         {
-            // if (amountPayed < transaction.Total)
-            //     return new TransactionReceipt("Insufficient funds to make transaction",0);
+            if (amountPayed < transaction.Total)
+                return new TransactionReceipt("Not enough Money", 0);
 
-            return new TransactionReceipt("something", amountPayed - transaction.Total);
+            var items = GetItems(transaction.Products.Split(",")).ToArray();
 
+            if (!HaveSufficientStock(items))
+                return new TransactionReceipt("Not Enough Stock", 0);
+
+            foreach (var item in items)
+                inventory.First(x => x.Identifier == item.Identifier).Quantity -= item.Quantity;
+
+            return new TransactionReceipt("Successful Transaction", amountPayed - transaction.Total);
+        }
+
+        private bool HaveSufficientStock(IEnumerable<Item> items)
+        {
+            return !items
+                .Any(item => item.Quantity > inventory.First(x => x.Identifier == item.Identifier)
+                    .Quantity);
         }
     }
 }

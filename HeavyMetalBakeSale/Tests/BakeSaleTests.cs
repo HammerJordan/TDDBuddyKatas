@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using HeavyMetalBakeSale.Kata;
 using Xunit;
@@ -8,10 +9,11 @@ namespace HeavyMetalBakeSale.Tests
     public class BakeSaleTests
     {
         private readonly BakeSale bakeSale;
+        private readonly List<Item> items;
 
         public BakeSaleTests()
         {
-            var items = new List<Item>()
+            items = new List<Item>()
             {
                 new()
                 {
@@ -81,6 +83,53 @@ namespace HeavyMetalBakeSale.Tests
             var transaction = bakeSale.ItemsToPurchase(items);
             var receipt = bakeSale.MakeTransaction(transaction, amountPayed);
             receipt.ChangeDue.Should().Be(expectedChange);
+        }
+        
+        [Fact]
+        public void MakeATransaction_ReducesInventoryStock()
+        {
+            var transaction = bakeSale.ItemsToPurchase("B,B");
+            var receipt = bakeSale.MakeTransaction(transaction, 10);
+            items[0].Quantity.Should().Be(46);
+        }
+        
+        
+
+        [Theory]
+        [InlineData("B", .5)]
+        [InlineData("C,M", 2)]
+        public void MakeATransaction_NotSellItemsWhenInsufficientFunds(string items,
+            decimal amountPayed)
+        {
+            var quantity = this.items.Select(x => x.Quantity).ToArray();
+            
+            var transaction = bakeSale.ItemsToPurchase(items);
+            var receipt = bakeSale.MakeTransaction(transaction, amountPayed);
+
+            receipt.Message.Should().BeEquivalentTo("Not enough Money");
+            receipt.ChangeDue.Should().Be(0);
+
+            for (int i = 0; i < quantity.Length; i++)
+                this.items[i].Quantity.Should().Be(quantity[i]);
+        }
+        
+        [Fact]
+        public void MakeATransaction_NotSellItemsWhen_NotEnoughStock()
+        {
+            var transaction = bakeSale.ItemsToPurchase("C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C");
+            var receipt = bakeSale.MakeTransaction(transaction, 99);
+
+            receipt.Message.Should().BeEquivalentTo("Not Enough Stock");
+            items[2].Quantity.Should().Be(24);
+            
+            transaction = bakeSale.ItemsToPurchase("C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C,C");
+            receipt = bakeSale.MakeTransaction(transaction, 99);
+            items[2].Quantity.Should().Be(0);
+            
+            transaction = bakeSale.ItemsToPurchase("C");
+            receipt = bakeSale.MakeTransaction(transaction, 99);
+            receipt.Message.Should().BeEquivalentTo("Not Enough Stock");
+            items[2].Quantity.Should().Be(0);
         }
     }
 }
